@@ -1,0 +1,98 @@
+ALGORITHME : carre_magique
+//BUT : créer un carré magique
+//ENTREE : la valeur 1
+//SORTIE : le reste du carré remplit
+
+CONST  TMAX <= 5 : ENTIER //taille du carre
+
+VAR carre : TABLEAU[1..TMAX,1..TMAX] de ENTIER
+	occupe : TABLEAU[1..TMAX,1..TMAX] de BOOLEEN
+	i,j : ENTIER
+
+PROCEDURE initialise
+//BUT : initialiser toutes les cases en non occupée
+//ENTREE : les deux tableaux
+//SORTIE : rien
+
+DEBUT
+	POUR i DE 1 A TMAX FAIRE
+		POUR j de 1 A TMAX FAIRE
+				occupe[i,j] <= FAUX;
+			FINSI
+		FINPOUR
+	FINPOUR
+FIN
+
+PROCEDURE remplir
+//BUT : remplir le carré magique
+//ENTREE : la valeur 1
+//SORTIE : rien 
+
+VAR nb,milieu : integer;
+
+DEBUT
+	nb <= 1 //nb sera le nombre placé dans le tableau, au début 1
+	milieu <= TMAX DIV 2 + 1 //permet de determiner le milieu du tableau
+
+	//i et j prennent la position de 1, c'est à dire à la case au nord du milieu du tableau. on place le chiffre 1 et on met "occupe" en VRAI
+	i <= milieu
+	j <= milieu - 1
+	carre[i,j] <= nb
+	occupe[i,j] <= VRAI
+
+	//on continue la boucle tant que nb n'est pas égal au dernier chiffre du tableau (pour un carré de 5x5 la dernière valeur sera bien égale à 25)
+	TANTQUE (nb<>TMAX*TMAX) FAIRE 
+		i <= i+1 
+		j <= j-1 //on monte au nord-est à chaque fois, et on incrémente nb 
+		nb <= nb+1
+		//on vérifie si i ou j sort du tableau, et si oui on le met à l'opposé
+		SI (i=TMAX+1) ALORS
+			i <= 1
+		FINSI
+		SI (j=0) ALORS
+			j <= TMAX
+		FINSI
+		//maintenant on vérifie si la cellule est occupée. si elle ne l'est pas, on place nb, et on met "occupe" en VRAI
+ 		SI (occupe[i,j]=FAUX) ALORS
+			carre[i,j] <= nb
+			occupe[i,j] <= VRAI
+		SINON // si elle l'est, on effectue le déplacement nord-ouest tout en vérifiant le débordement du tableau, et on place nb et on met "occupe" en VRAI
+			i <= i-1
+			j <= j-1
+			SI (j=0) ALORS
+				j <= TMAX
+			FINSI
+			SI (i=0) ALORS
+				i<= TMAX
+			FINSI
+			carre[i,j] <= nb
+			occupe[i,j] <= VRAI
+		FINSI
+	FINTANTQUE
+FIN
+
+PROCEDURE affiche
+//BUT : afficher le carré
+//ENTREE : les valeurs du tableau
+//SORTIE : rien
+
+DEBUT
+	POUR i DE 1 A TMAX FAIRE
+		POUR j de 1 A TMAX FAIRE
+			ECRIRE ('|') // les pipes permettent de faire les lignes du carré
+			ECRIRE (carre[j,i])
+		FINPOUR
+		ECRIRE('|')
+		ECRIRE() //permet le saut de ligne au bout du tableau( pour avoir un carré)
+	FINPOUR
+FIN
+
+
+DEBUT
+	initialise()
+	remplir()
+	affiche()
+FIN
+
+
+
